@@ -1,3 +1,16 @@
+Several environment variables and/or system properties contain different paths to the SDK.
+ANDROID_HOME: /home/runner/Android/Sdk
+ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+```[span_0](start_span)[span_0](end_span)
+
+Artinya ada **dua variabel path SDK yang berbeda** (`ANDROID_HOME` mengarah ke `/home/runner/Android/Sdk`, sedangkan `ANDROID_SDK_ROOT` bawaan runner masih mengarah ke `/usr/local/lib/android/sdk`), sehingga Gradle menolak lanjut[span_1](start_span)[span_1](end_span).
+
+### Cara Memperbaikinya
+Samakan `ANDROID_SDK_ROOT` dengan `ANDROID_HOME` (dan unset/hapus perbedaan path-nya) di langkah **`Install Android SDK & Command Line Tools`** pada `.github/workflows/build-apk.yml`.
+
+Ganti seluruh isi `.github/workflows/build-apk.yml` menjadi seperti ini:
+
+```yaml
 name: Build Android APK
 
 on:
@@ -29,6 +42,7 @@ jobs:
           rm cmdline-tools.zip
 
           echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
           echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses > /dev/null
@@ -40,14 +54,7 @@ jobs:
           gradle-version: '8.7'
 
       - name: Build Debug APK
-        run: |
-          echo "=== Current Dir ==="
-          pwd
-          echo "=== Root Files ==="
-          ls -la
-          echo "=== Check Gradle Files ==="
-          ls -la settings.gradle.kts build.gradle.kts app/build.gradle.kts || true
-          gradle assembleDebug --no-daemon --warning-mode=none
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
