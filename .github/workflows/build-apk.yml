@@ -1,16 +1,3 @@
-Several environment variables and/or system properties contain different paths to the SDK.
-ANDROID_HOME: /home/runner/Android/Sdk
-ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-```[span_0](start_span)[span_0](end_span)
-
-Artinya ada **dua variabel path SDK yang berbeda** (`ANDROID_HOME` mengarah ke `/home/runner/Android/Sdk`, sedangkan `ANDROID_SDK_ROOT` bawaan runner masih mengarah ke `/usr/local/lib/android/sdk`), sehingga Gradle menolak lanjut[span_1](start_span)[span_1](end_span).
-
-### Cara Memperbaikinya
-Samakan `ANDROID_SDK_ROOT` dengan `ANDROID_HOME` (dan unset/hapus perbedaan path-nya) di langkah **`Install Android SDK & Command Line Tools`** pada `.github/workflows/build-apk.yml`.
-
-Ganti seluruh isi `.github/workflows/build-apk.yml` menjadi seperti ini:
-
-```yaml
 name: Build Android APK
 
 on:
