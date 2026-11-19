@@ -40,7 +40,14 @@ jobs:
           gradle-version: '8.7'
 
       - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon
+        run: |
+          echo "=== Current Dir ==="
+          pwd
+          echo "=== Root Files ==="
+          ls -la
+          echo "=== Check Gradle Files ==="
+          ls -la settings.gradle.kts build.gradle.kts app/build.gradle.kts || true
+          gradle assembleDebug --no-daemon --warning-mode=none
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
